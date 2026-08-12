@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger — Expense &amp; Inventory Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">L</span>
+    <div class="brand-text">
+      <h1>Ledger</h1>
+      <p>Expense &amp; Inventory Tracking</p>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="add">Add Expense</button>
+    <button class="tab" data-tab="view">View / Manage</button>
+    <button class="tab" data-tab="inventory">Inventory</button>
+    <button class="tab" data-tab="summary">Summary</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ADD EXPENSE -->
+  <section class="panel tint-mint active" id="panel-add">
+    <div class="panel-inner">
+      <p class="eyebrow">New entry</p>
+      <h2>Add an expense</h2>
+      <form id="add-form" class="form-grid">
+        <label>Description
+          <input type="text" id="add-description" required>
+        </label>
+        <label>Amount (RM)
+          <input type="number" id="add-amount" step="0.01" min="0.01" required>
+        </label>
+        <label>Date
+          <input type="date" id="add-date" required>
+        </label>
+        <label>Type
+          <select id="add-type">
+            <option value="FIXED">Fixed</option>
+            <option value="VARIABLE" selected>Variable</option>
+          </select>
+        </label>
+        <label id="add-extra-label">Category
+          <input type="text" id="add-extra" placeholder="e.g. Groceries" required>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add expense</button>
+        </div>
+      </form>
+      <p class="feedback" id="add-feedback"></p>
+    </div>
+  </section>
+
+  <!-- VIEW / MANAGE -->
+  <section class="panel tint-blue" id="panel-view">
+    <div class="panel-inner">
+      <p class="eyebrow">Ledger</p>
+      <h2>View &amp; manage expenses</h2>
+
+      <div class="search-row">
+        <input type="text" id="view-search" placeholder="Search by description or category…">
+        <button class="btn btn-outline" id="view-search-btn">Search</button>
+        <button class="btn btn-ghost" id="view-showall-btn">Show all</button>
+      </div>
+
+      <div class="ledger" id="expense-ledger">
+        <p class="empty-state">No expenses yet — add one to see it here.</p>
+      </div>
+
+      <div class="manage-row">
+        <label>Selected ID
+          <input type="number" id="view-id" placeholder="e.g. 1">
+        </label>
+        <label>New amount (RM)
+          <input type="number" id="view-amount" step="0.01">
+        </label>
+        <label>New description
+          <input type="text" id="view-description">
+        </label>
+        <div class="manage-actions">
+          <button class="btn btn-primary" id="view-update-btn">Update</button>
+          <button class="btn btn-danger" id="view-delete-btn">Delete</button>
+        </div>
+      </div>
+      <p class="feedback" id="view-feedback"></p>
+    </div>
+  </section>
+
+  <!-- INVENTORY -->
+  <section class="panel tint-amber" id="panel-inventory">
+    <div class="panel-inner">
+      <p class="eyebrow">Assets</p>
+      <h2>Inventory</h2>
+
+      <form id="inv-add-form" class="form-grid form-grid-3">
+        <label>Item name
+          <input type="text" id="inv-name" required>
+        </label>
+        <label>Quantity
+          <input type="number" id="inv-quantity" min="0" required>
+        </label>
+        <label>Unit price (RM)
+          <input type="number" id="inv-price" step="0.01" min="0.01" required>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add item</button>
+        </div>
+      </form>
+
+      <div class="search-row">
+        <input type="text" id="inv-search" placeholder="Search items…">
+        <button class="btn btn-outline" id="inv-search-btn">Search</button>
+        <button class="btn btn-ghost" id="inv-showall-btn">Show all</button>
+      </div>
+
+      <div class="ledger" id="inventory-ledger">
+        <p class="empty-state">No items yet — add one to see it here.</p>
+      </div>
+
+      <div class="manage-row">
+        <label>Selected ID
+          <input type="number" id="inv-id" placeholder="e.g. 1">
+        </label>
+        <label>New quantity
+          <input type="number" id="inv-new-quantity" min="0">
+        </label>
+        <label>New unit price (RM)
+          <input type="number" id="inv-new-price" step="0.01">
+        </label>
+        <div class="manage-actions">
+          <button class="btn btn-primary" id="inv-update-btn">Update</button>
+          <button class="btn btn-danger" id="inv-delete-btn">Delete</button>
+        </div>
+      </div>
+      <p class="feedback" id="inv-feedback"></p>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="panel tint-lavender" id="panel-summary">
+    <div class="panel-inner">
+      <p class="eyebrow">At a glance</p>
+      <h2>Summary</h2>
+      <div class="stat-grid">
+        <div class="stat">
+          <span class="stat-label">Total amount</span>
+          <span class="stat-value" id="stat-total">RM 0.00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Fixed</span>
+          <span class="stat-value" id="stat-fixed">RM 0.00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Variable</span>
+          <span class="stat-value" id="stat-variable">RM 0.00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Monthly impact</span>
+          <span class="stat-value" id="stat-impact">RM 0.00</span>
+        </div>
+        <div class="stat stat-accent">
+          <span class="stat-label">Inventory value</span>
+          <span class="stat-value" id="stat-inventory">RM 0.00</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="summary-refresh-btn">Refresh summary</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
