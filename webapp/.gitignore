@@ -1,0 +1,6 @@
+target/
+*.class
+data/*.txt
+.idea/
+*.iml
+.vscode/
