@@ -21,7 +21,7 @@ public class InventoryController {
 
     @GetMapping
     public List<InventoryDto> getAll(@RequestParam(required = false) String keyword) {
-        ArrayList<InventoryItem> source;
+        List<InventoryItem> source;
         if (keyword == null || keyword.trim().isEmpty()) {
             source = manager.getAllItems();
         } else {
@@ -41,7 +41,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
-    public InventoryDto update(@PathVariable int id, @RequestBody UpdateInventoryRequest request) throws InvalidInventoryException {
+    public InventoryDto update(@PathVariable Long id, @RequestBody UpdateInventoryRequest request) throws InvalidInventoryException {
         boolean success = manager.updateItem(id, request.quantity, request.unitPrice);
         if (!success) {
             throw new NoSuchElementFoundException("No inventory item found with id " + id);
@@ -50,7 +50,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         boolean success = manager.deleteItem(id);
         if (!success) {
             throw new NoSuchElementFoundException("No inventory item found with id " + id);
