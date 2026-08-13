@@ -1,16 +1,25 @@
 package com.expensetracker.model;
 
-/**
- * A single asset/stock item, separate from expenses. Mirrors Expense's
- * encapsulation and validation style so the two models stay consistent.
- */
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class InventoryItem {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String itemName;
     private int quantity;
     private double unitPrice;
 
-    public InventoryItem(int id, String itemName, int quantity, double unitPrice) throws InvalidInventoryException {
+    protected InventoryItem() {
+    }
+
+    public InventoryItem(String itemName, int quantity, double unitPrice) throws InvalidInventoryException {
         if (itemName == null || itemName.trim().isEmpty()) {
             throw new InvalidInventoryException("Item name cannot be empty.");
         }
@@ -20,13 +29,12 @@ public class InventoryItem {
         if (unitPrice <= 0) {
             throw new InvalidInventoryException("Unit price must be positive.");
         }
-        this.id = id;
         this.itemName = itemName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -65,9 +73,5 @@ public class InventoryItem {
 
     public double getTotalValue() {
         return quantity * unitPrice;
-    }
-
-    public String toFileLine() {
-        return id + "|" + itemName + "|" + quantity + "|" + unitPrice;
     }
 }
