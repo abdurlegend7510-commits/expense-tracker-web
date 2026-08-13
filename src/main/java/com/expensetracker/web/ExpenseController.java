@@ -12,10 +12,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Same job as MainGUI's onAdd/onSearch/onUpdate/onDelete - just triggered
- * by an HTTP request instead of a button click.
- */
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
@@ -28,7 +24,7 @@ public class ExpenseController {
 
     @GetMapping
     public List<ExpenseDto> getAll(@RequestParam(required = false) String keyword) {
-        ArrayList<Expense> source;
+        List<Expense> source;
         if (keyword == null || keyword.trim().isEmpty()) {
             source = manager.getAllExpenses();
         } else {
@@ -65,7 +61,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{id}")
-    public ExpenseDto update(@PathVariable int id, @RequestBody UpdateExpenseRequest request) throws InvalidExpenseException {
+    public ExpenseDto update(@PathVariable Long id, @RequestBody UpdateExpenseRequest request) throws InvalidExpenseException {
         boolean success = manager.updateExpense(id, request.amount, request.description);
         if (!success) {
             throw new NoSuchElementFoundException("No expense found with id " + id);
@@ -74,7 +70,7 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         boolean success = manager.deleteExpense(id);
         if (!success) {
             throw new NoSuchElementFoundException("No expense found with id " + id);
