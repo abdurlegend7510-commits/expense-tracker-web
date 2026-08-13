@@ -1,16 +1,20 @@
 package com.expensetracker.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 
-/**
- * A recurring fixed expense (e.g. rent, subscriptions) that repeats on the
- * same day every month.
- */
+@Entity
+@DiscriminatorValue("FIXED")
 public class FixedExpense extends Expense {
+
     private int dueDay;
 
-    public FixedExpense(int id, String description, double amount, LocalDate date, int dueDay) throws InvalidExpenseException {
-        super(id, description, amount, date);
+    protected FixedExpense() {
+    }
+
+    public FixedExpense(String description, double amount, LocalDate date, int dueDay) throws InvalidExpenseException {
+        super(description, amount, date);
         if (dueDay < 1 || dueDay > 31) {
             throw new InvalidExpenseException("Due day must be between 1 and 31.");
         }
@@ -41,10 +45,5 @@ public class FixedExpense extends Expense {
     @Override
     public String getType() {
         return "FIXED";
-    }
-
-    @Override
-    public String toFileLine() {
-        return "FIXED|" + getId() + "|" + getDescription() + "|" + getAmount() + "|" + getDate() + "|" + dueDay;
     }
 }
