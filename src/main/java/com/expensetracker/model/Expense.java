@@ -1,20 +1,26 @@
 package com.expensetracker.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
-/**
- * Abstract parent class for every expense in the system.
- * Identical logic to the Swing version - the model layer has no
- * dependency on any GUI toolkit, which is exactly what lets it be
- * reused unchanged in a web backend.
- */
+@Entity
+@Table(name = "expense")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "expense_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Expense {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String description;
     private double amount;
     private LocalDate date;
 
-    public Expense(int id, String description, double amount, LocalDate date) throws InvalidExpenseException {
+    protected Expense() {
+    }
+
+    public Expense(String description, double amount, LocalDate date) throws InvalidExpenseException {
         if (description == null || description.trim().isEmpty()) {
             throw new InvalidExpenseException("Description cannot be empty.");
         }
@@ -24,13 +30,12 @@ public abstract class Expense {
         if (date == null) {
             throw new InvalidExpenseException("Date cannot be empty.");
         }
-        this.id = id;
         this.description = description;
         this.amount = amount;
         this.date = date;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -63,5 +68,4 @@ public abstract class Expense {
     public abstract double calculateMonthlyImpact();
     public abstract String getCategoryLabel();
     public abstract String getType();
-    public abstract String toFileLine();
 }
