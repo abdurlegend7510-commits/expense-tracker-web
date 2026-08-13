@@ -1,16 +1,20 @@
 package com.expensetracker.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 
-/**
- * A one-off or irregular expense (e.g. groceries, entertainment) tagged
- * with a spending category.
- */
+@Entity
+@DiscriminatorValue("VARIABLE")
 public class VariableExpense extends Expense {
+
     private String category;
 
-    public VariableExpense(int id, String description, double amount, LocalDate date, String category) throws InvalidExpenseException {
-        super(id, description, amount, date);
+    protected VariableExpense() {
+    }
+
+    public VariableExpense(String description, double amount, LocalDate date, String category) throws InvalidExpenseException {
+        super(description, amount, date);
         if (category == null || category.trim().isEmpty()) {
             throw new InvalidExpenseException("Category cannot be empty.");
         }
@@ -41,10 +45,5 @@ public class VariableExpense extends Expense {
     @Override
     public String getType() {
         return "VARIABLE";
-    }
-
-    @Override
-    public String toFileLine() {
-        return "VARIABLE|" + getId() + "|" + getDescription() + "|" + getAmount() + "|" + getDate() + "|" + category;
     }
 }
